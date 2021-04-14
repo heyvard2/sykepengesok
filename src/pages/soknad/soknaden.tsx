@@ -82,22 +82,26 @@ const Fordeling = () => {
     const stegNo = parseInt(stegId)
     const history = useHistory()
 
+    if (!valgtSoknad) {
+        return null
+    }
+
     if (isNaN(stegNo)) {
-        history.replace(getUrlTilSoknad(valgtSoknad!))
+        history.replace(getUrlTilSoknad(valgtSoknad))
         return null
     }
 
     const tittel = tekst(hentNokkel(valgtSoknad!, stegNo) as any)
-    const erUtlandssoknad = valgtSoknad!.soknadstype === RSSoknadstype.OPPHOLD_UTLAND
-    const erReisetilskuddsoknad = valgtSoknad!.soknadstype === RSSoknadstype.REISETILSKUDD
+    const erUtlandssoknad = valgtSoknad.soknadstype === RSSoknadstype.OPPHOLD_UTLAND
+    const erReisetilskuddsoknad = valgtSoknad.soknadstype === RSSoknadstype.REISETILSKUDD
 
-    switch (valgtSoknad!.status) {
+    switch (valgtSoknad.status) {
         // Nye søknader
         case RSSoknadstatus.NY:
         case RSSoknadstatus.UTKAST_TIL_KORRIGERING:
             return (
                 <>
-                    <Vis hvis={valgtSoknad!.status === RSSoknadstatus.UTKAST_TIL_KORRIGERING}>
+                    <Vis hvis={valgtSoknad.status === RSSoknadstatus.UTKAST_TIL_KORRIGERING}>
                         <AlertStripe type="info" className="blokk-s">
                             <span>{tekst('sykepengesoknad.utkast-til-korrigering.info')}</span>
                         </AlertStripe>
@@ -112,7 +116,7 @@ const Fordeling = () => {
                     </Vis>
 
                     <Vis hvis={stegNo > 1}>
-                        <Link to={'/soknader/' + valgtSoknad!.id + SEPARATOR + (stegNo - 1)}
+                        <Link to={'/soknader/' + valgtSoknad.id + SEPARATOR + (stegNo - 1)}
                             className="lenke tilbakelenke">
                             <VenstreChevron />
                             <Normaltekst tag="span">{tekst('soknad.tilbakeknapp')}</Normaltekst>
