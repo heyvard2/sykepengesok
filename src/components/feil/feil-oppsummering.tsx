@@ -8,7 +8,7 @@ import { erSynligIViewport } from '../../utils/browser-utils'
 import { flattenSporsmal } from '../../utils/soknad-utils'
 import { useAmplitudeInstance } from '../amplitude/amplitude'
 import { SpmProps } from '../sporsmal/sporsmal-form/sporsmal-form'
-import Vis from '../vis'
+import VisBlock from '../vis-block'
 
 interface FeiloppsummeringProps {
     settFokus?: boolean;
@@ -58,7 +58,7 @@ const FeilOppsummering = (props: FeilProps) => {
 
         let elmid
         if (id.includes('_')) {
-            if(list[1].type === 'periode') {
+            if (list[1].type === 'periode') {
                 elmid = id + '_fom'
             } else {
                 elmid = id + '_' + list[1].type
@@ -93,23 +93,27 @@ const FeilOppsummering = (props: FeilProps) => {
 
     return (
         <div aria-live="polite" role="alert">
-            <Vis hvis={entries.length > 0}>
-                <div ref={oppsummering} tabIndex={0} role="region" className="feiloppsummering">
-                    <Undertittel>{'Det er ' + entries.length + ' feil i skjemaet'}</Undertittel>
-                    <ul className="feiloppsummering__liste">
-                        {entries.sort(list => list[0][0]).map((list, index) => (
-                            <li key={index}>
-                                <div role="link" className="lenke" tabIndex={0}
-                                    onKeyDown={(e) => handleKeyDown(e, list)}
-                                    onClick={() => handleClick(list)}
-                                >
-                                    {list[1].message}
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </Vis>
+            <VisBlock hvis={entries.length > 0}
+                render={() => {
+                    return (
+                        <div ref={oppsummering} tabIndex={0} role="region" className="feiloppsummering">
+                            <Undertittel>{'Det er ' + entries.length + ' feil i skjemaet'}</Undertittel>
+                            <ul className="feiloppsummering__liste">
+                                {entries.sort(list => list[0][0]).map((list, index) => (
+                                    <li key={index}>
+                                        <div role="link" className="lenke" tabIndex={0}
+                                            onKeyDown={(e) => handleKeyDown(e, list)}
+                                            onClick={() => handleClick(list)}
+                                        >
+                                            {list[1].message}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )
+                }}
+            />
         </div>
     )
 }
